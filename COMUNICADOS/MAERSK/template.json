@@ -1,0 +1,13 @@
+{
+  "key": "MAE",
+  "name": "MAERSK",
+  "color": "#00243D",
+  "fullName": "Maersk Line",
+  "salutation": "Dear Valued Customer,",
+  "closing": "Best Regards,\nMaersk Customer Experience\nMaersk Line",
+  "layout": "generic",
+  "bodyRollover": "We would like to inform you that due to vessel capacity constraints, the above referenced cargo originally booked on {vO} has been rolled to {vN}.\n\nWe apologize for any disruption and are committed to resolving this as quickly as possible.\n\nFor further information please contact your local Maersk representative or visit maersk.com.",
+  "bodyVessel": "We would like to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe apologize for any disruption. For further information please contact your local Maersk representative or visit maersk.com.",
+  "bodyDelay": "We would like to inform you that the departure of {vO} has been delayed.\n\nFor further information please contact your local Maersk representative or visit maersk.com.",
+  "bodyOther": "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information please contact your local Maersk representative or visit maersk.com."
+}

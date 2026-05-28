@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunicados — Armadores | Logmakers</title>
+<style>
+/* ── Variables ─────────────────────────────────────────── */
+:root {
+  --bg:       #0d1117;
+  --surface:  #161b22;
+  --surface2: #1c2128;
+  --border:   #30363d;
+  --text:     #e6edf3;
+  --muted:    #8b949e;
+  --accent:   #58a6ff;
+  --green:    #3fb950;
+  --radius:   6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg); color: var(--text);
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px; height: 48px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.logo { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+.logo em { color: var(--accent); font-style: normal; }
+.header-divider { width: 1px; height: 20px; background: var(--border); }
+.header-title { font-size: 13px; color: var(--muted); }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.app { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Form Panel ──────────────────────────────────────────── */
+.form-panel {
+  width: 340px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.form-inner { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+
+.sec-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+
+/* Armador grid */
+.armador-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
+.arm-card {
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 8px 4px; text-align: center; cursor: pointer;
+  transition: border-color .15s, background .15s;
+  background: var(--surface2);
+}
+.arm-card:hover { border-color: var(--accent); }
+.arm-card.active {
+  border-color: var(--arm-color);
+  background: color-mix(in srgb, var(--arm-color) 12%, var(--surface2));
+}
+.arm-dot {
+  width: 24px; height: 24px; border-radius: 4px;
+  margin: 0 auto 4px; background: var(--arm-color);
+}
+.arm-name { font-size: 10px; font-weight: 600; }
+
+/* Type pills */
+.type-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.type-pill {
+  padding: 5px 11px; border-radius: 20px; font-size: 12px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--muted); transition: all .15s;
+}
+.type-pill:hover { color: var(--text); border-color: var(--accent); }
+.type-pill.active { background: var(--accent); border-color: var(--accent); color: #0d1117; font-weight: 600; }
+
+/* Fields */
+.fields { display: flex; flex-direction: column; gap: 9px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 11px; color: var(--muted); font-weight: 500; }
+.field input, .field textarea {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 7px 9px;
+  color: var(--text); font-size: 12px; font-family: inherit;
+  transition: border-color .15s; width: 100%;
+}
+.field input:focus, .field textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.field textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+.field.full { grid-column: 1 / -1; }
+
+hr.sep { border: none; border-top: 1px solid var(--border); }
+
+/* Action bar */
+.action-bar {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 6px; flex-shrink: 0;
+}
+.btn {
+  flex: 1; padding: 8px 12px; border-radius: var(--radius); border: none;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.btn-primary { background: var(--accent); color: #0d1117; }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-ghost {
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn.success { background: var(--green) !important; color: #0d1117 !important; }
+
+/* ── Preview Panel ───────────────────────────────────────── */
+.preview-panel {
+  flex: 1; background: #d0d7de;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.preview-bar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 16px; height: 40px;
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.preview-label { font-size: 12px; color: var(--muted); flex: 1; }
+.preview-scroll { flex: 1; overflow-y: auto; padding: 28px; }
+.email-wrap {
+  max-width: 680px; margin: 0 auto;
+  background: white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1), 0 4px 20px rgba(0,0,0,.15);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px; color: #222; line-height: 1.6;
+}
+.empty-state {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 360px; color: #888; flex-direction: column; gap: 10px;
+}
+.empty-state svg { opacity: .4; }
+
+/* ── Email Layouts ───────────────────────────────────────── */
+/* Common */
+.e-body { padding: 24px 28px; }
+.e-footer {
+  padding: 10px 28px; background: #f4f4f4;
+  border-top: 1px solid #e0e0e0;
+  font-size: 11px; color: #888; text-align: center;
+}
+.e-salutation { font-weight: 600; margin-bottom: 14px; }
+.e-text { margin-bottom: 18px; white-space: pre-line; }
+.e-closing { margin-top: 22px; padding-top: 16px; border-top: 1px solid #eee; white-space: pre-line; font-size: 13px; color: #444; }
+.e-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 13px; }
+.e-table th { background: #f0f0f0; padding: 7px 11px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; border: 1px solid #ddd; color: #444; }
+.e-table td { padding: 7px 11px; border: 1px solid #ddd; }
+.e-meta { background: #f8f9fa; border-left: 3px solid #ccc; padding: 10px 14px; margin-bottom: 18px; font-size: 13px; line-height: 1.9; }
+.e-meta b { color: #333; }
+.vessel-box {
+  background: #fff8e1; border: 1px solid #ffe082;
+  border-radius: 4px; padding: 10px 14px; margin-bottom: 18px;
+  font-size: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.vessel-arrow { color: #e65100; font-size: 18px; font-weight: 700; }
+
+/* CMA header */
+.hdr-cma { background: #C8102E; color: white; padding: 18px 28px; }
+.hdr-cma .h-brand { font-size: 22px; font-weight: 700; letter-spacing: 2px; }
+.hdr-cma .h-service { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 3px; opacity: .85; }
+.hdr-cma .h-type { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 1px; opacity: .65; }
+
+/* ZIM header */
+.hdr-zim { background: #003DA5; color: white; padding: 18px 28px; display: flex; align-items: center; gap: 20px; }
+.hdr-zim .h-brand { font-size: 28px; font-weight: 900; letter-spacing: 4px; border-right: 2px solid rgba(255,255,255,.3); padding-right: 20px; }
+.hdr-zim .h-sub { font-size: 13px; opacity: .85; }
+
+/* HMM header */
+.hdr-hmm { background: #E31837; color: white; padding: 14px 28px; display: flex; align-items: center; gap: 14px; }
+.hdr-hmm .h-brand { font-size: 22px; font-weight: 900; letter-spacing: 2px; }
+.hdr-hmm .h-tagline { font-size: 11px; opacity: .75; }
+.hmm-vessels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.hmm-vbox { background: #f5f5f5; border: 1px solid #ddd; padding: 12px; }
+.hmm-vbox .vb-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #666; margin-bottom: 3px; }
+.hmm-vbox .vb-val { font-weight: 700; color: #003087; font-size: 15px; }
+
+/* PIL header */
+.hdr-pil { background: #005587; color: white; padding: 16px 28px; }
+.hdr-pil .h-brand { font-size: 22px; font-weight: 700; letter-spacing: 2px; }
+.hdr-pil .h-notice { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; opacity: .8; }
+.pil-footer-date { font-size: 11px; color: #888; text-align: right; padding: 0 28px 10px; font-style: italic; }
+
+/* Generic header */
+.hdr-generic { padding: 16px 28px; border-bottom: 4px solid var(--brand-color, #333); display: flex; align-items: center; gap: 14px; }
+.hdr-generic .h-brand { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--brand-color, #333); }
+
+/* ── Print styles ────────────────────────────────────────── */
+@media print {
+  header, .form-panel, .preview-bar { display: none !important; }
+  body { background: white; display: block; height: auto; overflow: visible; }
+  .app { display: block; }
+  .preview-panel { background: white; display: block; }
+  .preview-scroll { padding: 0; overflow: visible; }
+  .email-wrap { box-shadow: none; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">LOG<em>MAKERS</em></div>
+  <div class="header-divider"></div>
+  <div class="header-title">Gerador de Comunicados — Armadores</div>
+</header>
+
+<div class="app">
+
+  <!-- ── Form Panel ── -->
+  <div class="form-panel">
+    <div class="form-inner">
+
+      <div>
+        <div class="sec-label">Armador</div>
+        <div class="armador-grid" id="armGrid"></div>
+      </div>
+
+      <hr class="sep">
+
+      <div>
+        <div class="sec-label">Tipo</div>
+        <div class="type-row">
+          <button class="type-pill active" data-type="rollover">Rollover</button>
+          <button class="type-pill" data-type="vessel">Troca de Navio</button>
+          <button class="type-pill" data-type="delay">Atraso</button>
+          <button class="type-pill" data-type="other">Outro</button>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <div class="fields">
+        <div class="sec-label" style="margin-bottom:2px">Detalhes</div>
+
+        <div class="field">
+          <label>Assunto / RE</label>
+          <input id="f-subject" type="text" placeholder="ex.: Rollover Notice — Santos / Shanghai">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Navio Original (vO)</label>
+            <input id="f-vO" type="text" placeholder="ex.: MSC DIANA">
+          </div>
+          <div class="field">
+            <label>Novo Navio (vN)</label>
+            <input id="f-vN" type="text" placeholder="ex.: MSC FLORA">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Booking</label>
+            <input id="f-booking" type="text" placeholder="ex.: CMDU12345678">
+          </div>
+          <div class="field">
+            <label>B/L</label>
+            <input id="f-bl" type="text" placeholder="ex.: MAEU12345678">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Container</label>
+            <input id="f-container" type="text" placeholder="ex.: TCKU1234567">
+          </div>
+          <div class="field">
+            <label>Data</label>
+            <input id="f-date" type="date">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>POL (Porto Origem)</label>
+            <input id="f-pol" type="text" placeholder="ex.: Santos">
+          </div>
+          <div class="field">
+            <label>POD (Porto Destino)</label>
+            <input id="f-pod" type="text" placeholder="ex.: Shanghai">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Corpo do Comunicado</label>
+          <textarea id="f-body" rows="6" placeholder="Selecione um armador para carregar o texto padrão..."></textarea>
+        </div>
+      </div>
+
+    </div><!-- /form-inner -->
+
+    <div class="action-bar">
+      <button class="btn btn-ghost" id="btn-copy-text" onclick="doCopy('text')">Copiar Texto</button>
+      <button class="btn btn-ghost" id="btn-copy-html" onclick="doCopy('html')">Copiar HTML</button>
+      <button class="btn btn-primary" onclick="window.print()">Imprimir</button>
+    </div>
+  </div><!-- /form-panel -->
+
+  <!-- ── Preview Panel ── -->
+  <div class="preview-panel">
+    <div class="preview-bar">
+      <span class="preview-label" id="preview-label">Selecione um armador para começar</span>
+      <button class="btn btn-ghost" style="flex:0;padding:5px 12px" onclick="doCopy('text')">Copiar Texto</button>
+      <button class="btn btn-primary" style="flex:0;padding:5px 12px" onclick="doCopy('html')">Copiar HTML</button>
+    </div>
+    <div class="preview-scroll">
+      <div class="email-wrap" id="email-output">
+        <div class="empty-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <p style="font-size:13px">Selecione um armador e preencha os dados</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+/* ── Template data ────────────────────────────────────────────────────
+   Embedded fallback; the app also tries to fetch ./FOLDER/template.json
+   at runtime (works when served via HTTP, silently falls back when
+   opened as file://).
+─────────────────────────────────────────────────────────────────────── */
+const FALLBACK = [
+  {
+    folder: "CMA CGM",
+    key: "CMA", name: "CMA CGM", color: "#C8102E",
+    fullName: "CMA CGM (China) Shipping Co., Ltd",
+    salutation: "Dear Valued Customers,",
+    closing: "Customer Service Officer\nCustomer Care Department\nCMA CGM (China) Shipping Co., Ltd",
+    layout: "cma",
+    bodyRollover: "We regret to inform you that the following cargo on board {vO}, originally scheduled to depart, will be re-arranged to a new vessel {vN}. Please proceed to the port with the original vessel name before the cut-off time.\n\nOur company will make unified arrangements for the missed loading onto {vN}, with all related costs borne by our company.\n\nPlease refer to https://www.cma-cgm.com/ for the latest port arrival information.\n\nThank you for your consistent support. We will provide you with our best service!",
+    bodyVessel: "We regret to inform you that the cargo originally scheduled on board {vO} will be re-arranged to {vN}.\n\nOur company will make unified arrangements for the missed loading, with all related costs borne by our company.\n\nThank you for your continued support!",
+    bodyDelay: "We regret to inform you that due to operational reasons, the departure of the referenced shipment has been delayed.\n\nWe sincerely apologize for any inconvenience caused and thank you for your understanding.",
+    bodyOther: "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information, please contact your local CMA CGM representative."
+  },
+  {
+    folder: "ZIM",
+    key: "ZIM", name: "ZIM", color: "#003DA5",
+    fullName: "ZIM Integrated Shipping Services Ltd.",
+    salutation: "Dear ZIM Customer,",
+    closing: "Sincerely,\nZIM Integrated Shipping",
+    layout: "zim",
+    bodyRollover: "Due to operation reasons, we would like to update you that {vO} will roll cargo to the next sailing {vN}. Your related BLs are as listed below.\n\nWe apologize for any inconvenience and appreciate your patience and understanding.\n\nFor additional information, please contact your local ZIM Customer Service or Sales Representative.",
+    bodyVessel: "Due to operation reasons, the cargo on board {vO} has been transferred to {vN}.\n\nWe apologize for any inconvenience. For additional information, please contact your local ZIM Customer Service.",
+    bodyDelay: "Due to operation reasons, the referenced sailing has been delayed. We apologize for any inconvenience.\n\nFor additional information, please contact your local ZIM Customer Service.",
+    bodyOther: "We would like to inform you of an operational update on the above referenced cargo.\n\nFor additional information, please contact your local ZIM Customer Service."
+  },
+  {
+    folder: "HMM",
+    key: "HMM", name: "HMM", color: "#E31837",
+    fullName: "HMM Co., Ltd.",
+    salutation: "Dear Customer,",
+    closing: "BEST REGARDS.\nHMM CHINA (SHENZHEN)\n(THIS NOTICE IS GENERATED BY COMPUTER AND DOES NOT REQUIRE A SIGNATURE.)",
+    layout: "hmm",
+    bodyRollover: "WE ARE DEEPLY SORRY TO INFORM YOU THAT, DUE TO OPERATIONAL DIFFICULTIES AND/OR ANY FORCE MAJEURE EVENT BEYOND THE CONTROL OF THE CARRIER ON \"{vO}\", ABOVE MENTIONED CONTAINER(S) HAVE BEEN SWITCHED TO {vN}, WE APOLOGIZE FOR ANY INCONVENIENCE CAUSED, THANKS.",
+    bodyVessel: "WE ARE DEEPLY SORRY TO INFORM YOU THAT, DUE TO OPERATIONAL DIFFICULTIES AND/OR ANY FORCE MAJEURE EVENT BEYOND THE CONTROL OF THE CARRIER ON \"{vO}\", ABOVE MENTIONED CONTAINER(S) HAVE BEEN SWITCHED AS BELOW DETAILS, WE APOLOGIZE FOR ANY INCONVENIENCE CAUSED, THANKS.",
+    bodyDelay: "WE ARE DEEPLY SORRY TO INFORM YOU THAT, DUE TO OPERATIONAL REASONS, THE DEPARTURE OF THE ABOVE MENTIONED CONTAINER(S) HAS BEEN DELAYED. WE APOLOGIZE FOR ANY INCONVENIENCE CAUSED. THANKS.",
+    bodyOther: "WE WOULD LIKE TO INFORM YOU OF AN UPDATE REGARDING THE ABOVE MENTIONED CONTAINER(S). PLEASE CONTACT HMM CUSTOMER SERVICE FOR FURTHER INFORMATION. THANKS."
+  },
+  {
+    folder: "MAERSK",
+    key: "MAE", name: "MAERSK", color: "#00243D",
+    fullName: "Maersk Line",
+    salutation: "Dear Valued Customer,",
+    closing: "Best Regards,\nMaersk Customer Experience\nMaersk Line",
+    layout: "generic",
+    bodyRollover: "We would like to inform you that due to vessel capacity constraints, the above referenced cargo originally booked on {vO} has been rolled to {vN}.\n\nWe apologize for any disruption and are committed to resolving this as quickly as possible.\n\nFor further information please contact your local Maersk representative or visit maersk.com.",
+    bodyVessel: "We would like to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe apologize for any disruption. For further information please contact your local Maersk representative or visit maersk.com.",
+    bodyDelay: "We would like to inform you that the departure of {vO} has been delayed.\n\nFor further information please contact your local Maersk representative or visit maersk.com.",
+    bodyOther: "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information please contact your local Maersk representative or visit maersk.com."
+  },
+  {
+    folder: "MSC",
+    key: "MSC", name: "MSC", color: "#232F80",
+    fullName: "MSC Mediterranean Shipping Company",
+    salutation: "Dear Valued Customer,",
+    closing: "Kind Regards,\nMSC Customer Service\nMSC Mediterranean Shipping Company",
+    layout: "generic",
+    bodyRollover: "We wish to inform you that the above referenced cargo, originally booked on {vO}, has been subject to a rollover and will now be carried on {vN}.\n\nWe apologize for any inconvenience. For further assistance, please contact your local MSC office.",
+    bodyVessel: "We wish to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe apologize for any inconvenience. For further assistance, please contact your local MSC office.",
+    bodyDelay: "We wish to inform you that there will be a delay in the departure of the above referenced shipment.\n\nWe apologize for any inconvenience and thank you for your understanding.",
+    bodyOther: "We wish to inform you of an update regarding the above referenced shipment.\n\nFor further assistance, please contact your local MSC office."
+  },
+  {
+    folder: "ONE",
+    key: "ONE", name: "ONE", color: "#E4002B",
+    fullName: "Ocean Network Express Pte. Ltd.",
+    salutation: "Dear Valued Customer,",
+    closing: "Best Regards,\nONE Customer Service\nOcean Network Express Pte. Ltd.",
+    layout: "generic",
+    bodyRollover: "We regret to inform you that due to vessel space constraints, the above mentioned cargo originally booked on {vO} has been rolled to the next available sailing ({vN}).\n\nWe sincerely apologize for any inconvenience and appreciate your kind understanding.\n\nFor further information, please contact your local ONE Customer Service representative.",
+    bodyVessel: "We regret to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe sincerely apologize. For further information, please contact your local ONE Customer Service representative.",
+    bodyDelay: "We regret to inform you that the departure of {vO} has been delayed.\n\nWe sincerely apologize for any inconvenience and appreciate your kind understanding.",
+    bodyOther: "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information, please contact your local ONE Customer Service representative."
+  },
+  {
+    folder: "PIL",
+    key: "PIL", name: "PIL", color: "#005587",
+    fullName: "Pacific International Lines",
+    salutation: "DEAR VALUED CUSTOMER,",
+    closing: "Pacific International Lines",
+    layout: "pil",
+    bodyRollover: "Please be advised the sailing on {vO} has been subject to a rollover to {vN}. The new departure date has been updated as referenced below.\n\nSorry for the inconvenience.",
+    bodyVessel: "Please be advised that the vessel has been changed from {vO} to {vN} due to operational reasons.\n\nSorry for the inconvenience.",
+    bodyDelay: "Please be advised the sailing on {vO} was delayed due to port congestion.\n\nSorry for the inconvenience.",
+    bodyOther: "Please be advised of an operational update regarding the above referenced sailing.\n\nFor further information, please contact your local PIL representative."
+  },
+  {
+    folder: "YANG MING",
+    key: "YML", name: "YANG MING", color: "#005AAA",
+    fullName: "Yang Ming Marine Transport Corporation",
+    salutation: "Dear Valued Customer,",
+    closing: "UNILINE AGENCIA MARITIMA LTDA\nAs Agents and on behalf of YML — Yang Ming Marine Transport Corp\n2120 Ibirapuera Avenue, 13th Floor - Room 131/133, Indianópolis, SP — 04028001, Brazil\n+55 (11) 3787-9901\nwww.uniline.com.br",
+    layout: "generic",
+    bodyRollover: "Please be advised that the vessel {vO} was impacted by move restrictions during her port call in order to maintain her berth window. Due to unexpected delays during cargo operations, part of the import cargo could not be discharged and remained on board upon vessel departure. The cargo will be re-arranged to the next available sailing on {vN}.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+    bodyVessel: "Please be advised that the cargo originally booked on board {vO} has been transferred to {vN} due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+    bodyDelay: "Please be advised that the departure of the vessel {vO} has been delayed due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+    bodyOther: "Please be advised of an operational update regarding the above referenced sailing.\n\nWe thank you in advance for your understanding and usual support. In case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team."
+  }
+];
+
+/* ── State ─────────────────────────────────────────────────────────── */
+let templates = {};   // key → template obj
+let activeKey = null;
+let activeType = 'rollover';
+
+/* ── Load templates ─────────────────────────────────────────────────
+   Tries fetch from ./FOLDER/template.json (works on HTTP server),
+   falls back to embedded FALLBACK silently.
+─────────────────────────────────────────────────────────────────────── */
+async function loadTemplates() {
+  for (const fb of FALLBACK) {
+    let tpl = fb;
+    try {
+      const r = await fetch(`./${encodeURIComponent(fb.folder)}/template.json`);
+      if (r.ok) tpl = { folder: fb.folder, ...await r.json() };
+    } catch {}
+    templates[fb.key] = tpl;
+  }
+  buildGrid();
+}
+
+/* ── Armador grid ──────────────────────────────────────────────────── */
+function buildGrid() {
+  const grid = document.getElementById('armGrid');
+  grid.innerHTML = '';
+  Object.values(templates).forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'arm-card';
+    el.style.setProperty('--arm-color', t.color);
+    el.innerHTML = `<div class="arm-dot"></div><div class="arm-name">${t.name}</div>`;
+    el.onclick = () => selectArmador(t.key);
+    grid.appendChild(el);
+  });
+}
+
+function selectArmador(key) {
+  activeKey = key;
+  document.querySelectorAll('.arm-card').forEach((c, i) => {
+    c.classList.toggle('active', Object.keys(templates)[i] === key);
+  });
+  loadBody();
+  render();
+}
+
+/* ── Type tabs ─────────────────────────────────────────────────────── */
+document.querySelectorAll('.type-pill').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeType = btn.dataset.type;
+    loadBody();
+    render();
+  };
+});
+
+function loadBody() {
+  if (!activeKey) return;
+  const t = templates[activeKey];
+  const map = { rollover: t.bodyRollover, vessel: t.bodyVessel, delay: t.bodyDelay, other: t.bodyOther };
+  document.getElementById('f-body').value = map[activeType] || t.bodyOther;
+}
+
+/* ── Live update ───────────────────────────────────────────────────── */
+document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', render));
+
+/* ── Values helper ─────────────────────────────────────────────────── */
+function val(id, fallback) {
+  return document.getElementById(id).value.trim() || fallback;
+}
+
+function getVals() {
+  return {
+    vO:        val('f-vO',        '[ORIGINAL VESSEL]'),
+    vN:        val('f-vN',        '[NEW VESSEL]'),
+    booking:   val('f-booking',   '[BOOKING]'),
+    bl:        val('f-bl',        '[B/L]'),
+    container: val('f-container', '[CONTAINER]'),
+    pol:       val('f-pol',       '[POL]'),
+    pod:       val('f-pod',       '[POD]'),
+    subject:   val('f-subject',   'Operational Update Notice'),
+    date:      document.getElementById('f-date').value,
+  };
+}
+
+function fill(text, v, name) {
+  return text
+    .replace(/\{vO\}/g, v.vO).replace(/\{vN\}/g, v.vN)
+    .replace(/\{booking\}/g, v.booking).replace(/\{bl\}/g, v.bl)
+    .replace(/\{container\}/g, v.container)
+    .replace(/\{pol\}/g, v.pol).replace(/\{pod\}/g, v.pod)
+    .replace(/\{name\}/g, name);
+}
+
+function fmtDate(s) {
+  if (!s) return new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  return new Date(s + 'T12:00:00').toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function nl(s) { return esc(s).replace(/\n/g,'<br>'); }
+
+/* ── Render ─────────────────────────────────────────────────────────── */
+function render() {
+  const out = document.getElementById('email-output');
+  const lbl = document.getElementById('preview-label');
+
+  if (!activeKey) {
+    out.innerHTML = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><p style="font-size:13px">Selecione um armador e preencha os dados</p></div>`;
+    return;
+  }
+
+  const t = templates[activeKey];
+  const v = getVals();
+  const body = fill(document.getElementById('f-body').value || '', v, t.name);
+  const typeLabel = { rollover:'Rollover', vessel:'Troca de Navio', delay:'Atraso', other:'Outro' }[activeType];
+  lbl.textContent = `${t.name} — ${typeLabel}`;
+  out.innerHTML = buildEmail(t, v, body);
+}
+
+function buildEmail(t, v, body) {
+  const date = fmtDate(v.date);
+  const subj = esc(v.subject);
+
+  if (t.layout === 'cma') {
+    return `
+<div class="hdr-cma">
+  <div class="h-brand">CMA CGM</div>
+  <div class="h-service">Asia – Latam Services</div>
+  <div class="h-type">Customer Advisory</div>
+</div>
+<div class="e-body">
+  <div class="e-meta"><b>DATE:</b> ${date}<br><b>RE:</b> ${subj}</div>
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <p class="e-text">${nl(body)}</p>
+  <table class="e-table">
+    <thead><tr><th>Booking No.</th><th>Container No.</th><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr><td>${esc(v.booking)}</td><td>${esc(v.container)}</td><td>${esc(v.pol)}</td><td>${esc(v.pod)}</td></tr></tbody>
+  </table>
+  <div class="vessel-box">
+    <span><b>Original Vessel:</b> ${esc(v.vO)}</span>
+    <span class="vessel-arrow">→</span>
+    <span><b>New Vessel:</b> ${esc(v.vN)}</span>
+  </div>
+  <div class="e-closing">${nl(t.closing)}</div>
+</div>
+<div class="e-footer">${esc(t.fullName)}</div>`;
+  }
+
+  if (t.layout === 'zim') {
+    return `
+<div class="hdr-zim">
+  <div class="h-brand">ZIM</div>
+  <div><div class="h-sub" style="font-size:14px;font-weight:600">Customer Advisory</div><div class="h-sub">Operational Update</div></div>
+</div>
+<div class="e-body">
+  <div class="e-meta"><b>Date:</b> ${date}<br><b>Re:</b> ${subj}</div>
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <p class="e-text">${nl(body)}</p>
+  <table class="e-table">
+    <thead><tr><th>B/L No.</th><th>Booking No.</th><th>Original Vessel</th><th>New Vessel</th><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr>
+      <td>${esc(v.bl)}</td><td>${esc(v.booking)}</td>
+      <td>${esc(v.vO)}</td><td>${esc(v.vN)}</td>
+      <td>${esc(v.pol)}</td><td>${esc(v.pod)}</td>
+    </tr></tbody>
+  </table>
+  <div class="e-closing">${nl(t.closing)}</div>
+</div>
+<div class="e-footer">${esc(t.fullName)}</div>`;
+  }
+
+  if (t.layout === 'hmm') {
+    return `
+<div class="hdr-hmm">
+  <div class="h-brand">HMM</div>
+  <div class="h-tagline">Hyundai Merchant Marine</div>
+</div>
+<div class="e-body">
+  <div class="e-meta">
+    <b>DATE:</b> ${date}<br>
+    <b>FROM:</b> HMM Customer Service<br>
+    <b>RE:</b> ${subj}
+  </div>
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <table class="e-table" style="margin-bottom:14px">
+    <thead><tr><th>CNTR No.</th><th>B/L No.</th><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr>
+      <td>${esc(v.container)}</td><td>${esc(v.bl)}</td>
+      <td>${esc(v.pol)}</td><td>${esc(v.pod)}</td>
+    </tr></tbody>
+  </table>
+  <div class="hmm-vessels">
+    <div class="hmm-vbox"><div class="vb-lbl">Original Vessel</div><div class="vb-val">${esc(v.vO)}</div></div>
+    <div class="hmm-vbox"><div class="vb-lbl">New Vessel</div><div class="vb-val">${esc(v.vN)}</div></div>
+  </div>
+  <p class="e-text">${nl(body)}</p>
+  <div class="e-closing" style="font-size:12px">${nl(t.closing)}</div>
+</div>
+<div class="e-footer">${esc(t.fullName)}</div>`;
+  }
+
+  if (t.layout === 'pil') {
+    return `
+<div class="hdr-pil">
+  <div class="h-brand">PIL</div>
+  <div class="h-notice">Rollover / Vessel Change Notice</div>
+</div>
+<div class="e-body">
+  <div class="e-meta"><b>Date:</b> ${date}<br><b>Re:</b> ${subj}</div>
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <p class="e-text">${nl(body)}</p>
+  <table class="e-table">
+    <thead><tr><th>Booking No.</th><th>Container No.</th><th>B/L No.</th><th>Original Vessel</th><th>New Vessel</th></tr></thead>
+    <tbody><tr>
+      <td>${esc(v.booking)}</td><td>${esc(v.container)}</td><td>${esc(v.bl)}</td>
+      <td>${esc(v.vO)}</td><td>${esc(v.vN)}</td>
+    </tr></tbody>
+  </table>
+  <table class="e-table" style="margin-bottom:0">
+    <thead><tr><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr><td>${esc(v.pol)}</td><td>${esc(v.pod)}</td></tr></tbody>
+  </table>
+  <div class="e-closing">${nl(t.closing)}</div>
+</div>
+<div class="pil-footer-date">${v.date || new Date().toISOString().split('T')[0]}</div>`;
+  }
+
+  /* generic: MAERSK, MSC, ONE, YANG MING */
+  return `
+<div class="hdr-generic" style="--brand-color:${t.color}">
+  <div class="h-brand">${esc(t.name.toUpperCase())}</div>
+</div>
+<div class="e-body">
+  <div class="e-meta">
+    <b>FM:</b> ${esc(t.name)} Customer Service<br>
+    <b>DATE:</b> ${date}<br>
+    <b>RE:</b> ${subj}
+  </div>
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <table class="e-table">
+    <thead><tr><th>Booking No.</th><th>Container No.</th><th>B/L No.</th><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr>
+      <td>${esc(v.booking)}</td><td>${esc(v.container)}</td><td>${esc(v.bl)}</td>
+      <td>${esc(v.pol)}</td><td>${esc(v.pod)}</td>
+    </tr></tbody>
+  </table>
+  <div class="vessel-box">
+    <span><b>Original Vessel:</b> ${esc(v.vO)}</span>
+    <span class="vessel-arrow">→</span>
+    <span><b>New Vessel:</b> ${esc(v.vN)}</span>
+  </div>
+  <p class="e-text">${nl(body)}</p>
+  <div class="e-closing">${nl(t.closing)}</div>
+</div>
+<div class="e-footer">${esc(t.fullName)}</div>`;
+}
+
+/* ── Copy ──────────────────────────────────────────────────────────── */
+function doCopy(mode) {
+  if (!activeKey) return;
+
+  const el = document.getElementById('email-output');
+  const content = mode === 'html' ? el.innerHTML : el.innerText;
+
+  navigator.clipboard.writeText(content).then(() => {
+    const ids = mode === 'html' ? ['btn-copy-html'] : ['btn-copy-text'];
+    ids.forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copiado!';
+      btn.classList.add('success');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('success'); }, 2000);
+    });
+  });
+}
+
+/* ── Init ──────────────────────────────────────────────────────────── */
+document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+loadTemplates();
+</script>
+</body>
+</html>

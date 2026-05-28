@@ -1,0 +1,13 @@
+{
+  "key": "PIL",
+  "name": "PIL",
+  "color": "#005587",
+  "fullName": "Pacific International Lines",
+  "salutation": "DEAR VALUED CUSTOMER,",
+  "closing": "Pacific International Lines",
+  "layout": "pil",
+  "bodyRollover": "Please be advised the sailing on {vO} has been subject to a rollover to {vN}. The new departure date has been updated as referenced below.\n\nSorry for the inconvenience.",
+  "bodyVessel": "Please be advised that the vessel has been changed from {vO} to {vN} due to operational reasons.\n\nSorry for the inconvenience.",
+  "bodyDelay": "Please be advised the sailing on {vO} was delayed due to port congestion.\n\nSorry for the inconvenience.",
+  "bodyOther": "Please be advised of an operational update regarding the above referenced sailing.\n\nFor further information, please contact your local PIL representative."
+}

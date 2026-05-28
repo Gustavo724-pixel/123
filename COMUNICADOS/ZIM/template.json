@@ -1,0 +1,13 @@
+{
+  "key": "ZIM",
+  "name": "ZIM",
+  "color": "#003DA5",
+  "fullName": "ZIM Integrated Shipping",
+  "salutation": "Dear ZIM Customer,",
+  "closing": "Sincerely,\nZIM Integrated Shipping",
+  "layout": "zim",
+  "bodyRollover": "Due to operation reasons, we would like to update you that {vO} will roll cargo to the next sailing {vN}. Your related BLs are as listed below.\n\nWe apologize for any inconvenience and appreciate your patience and understanding.\n\nFor additional information, please contact your local ZIM Customer Service or Sales Representative.",
+  "bodyVessel": "Due to operation reasons, the cargo on board {vO} has been transferred to {vN}.\n\nWe apologize for any inconvenience. For additional information, please contact your local ZIM Customer Service.",
+  "bodyDelay": "Due to operation reasons, the referenced sailing has been delayed. We apologize for any inconvenience.\n\nFor additional information, please contact your local ZIM Customer Service.",
+  "bodyOther": "We would like to inform you of an operational update on the above referenced cargo.\n\nFor additional information, please contact your local ZIM Customer Service."
+}

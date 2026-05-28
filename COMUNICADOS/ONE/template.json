@@ -1,0 +1,13 @@
+{
+  "key": "ONE",
+  "name": "ONE",
+  "color": "#E4002B",
+  "fullName": "Ocean Network Express Pte. Ltd.",
+  "salutation": "Dear Valued Customer,",
+  "closing": "Best Regards,\nONE Customer Service\nOcean Network Express Pte. Ltd.",
+  "layout": "generic",
+  "bodyRollover": "We regret to inform you that due to vessel space constraints, the above mentioned cargo originally booked on {vO} has been rolled to the next available sailing ({vN}).\n\nWe sincerely apologize for any inconvenience and appreciate your kind understanding.\n\nFor further information, please contact your local ONE Customer Service representative.",
+  "bodyVessel": "We regret to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe sincerely apologize. For further information, please contact your local ONE Customer Service representative.",
+  "bodyDelay": "We regret to inform you that the departure of {vO} has been delayed.\n\nWe sincerely apologize for any inconvenience and appreciate your kind understanding.",
+  "bodyOther": "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information, please contact your local ONE Customer Service representative."
+}

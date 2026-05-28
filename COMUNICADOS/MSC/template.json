@@ -1,0 +1,13 @@
+{
+  "key": "MSC",
+  "name": "MSC",
+  "color": "#232F80",
+  "fullName": "MSC Mediterranean Shipping Company",
+  "salutation": "Dear Valued Customer,",
+  "closing": "Kind Regards,\nMSC Customer Service\nMSC Mediterranean Shipping Company",
+  "layout": "generic",
+  "bodyRollover": "We wish to inform you that the above referenced cargo, originally booked on {vO}, has been subject to a rollover and will now be carried on {vN}.\n\nWe apologize for any inconvenience. For further assistance, please contact your local MSC office.",
+  "bodyVessel": "We wish to inform you that the cargo has been transferred from {vO} to {vN}.\n\nWe apologize for any inconvenience. For further assistance, please contact your local MSC office.",
+  "bodyDelay": "We wish to inform you that there will be a delay in the departure of the above referenced shipment.\n\nWe apologize for any inconvenience and thank you for your understanding.",
+  "bodyOther": "We wish to inform you of an update regarding the above referenced shipment.\n\nFor further assistance, please contact your local MSC office."
+}

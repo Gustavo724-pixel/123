@@ -1,0 +1,13 @@
+{
+  "key": "YML",
+  "name": "YANG MING",
+  "color": "#005AAA",
+  "fullName": "Yang Ming Marine Transport Corporation",
+  "salutation": "Dear Valued Customer,",
+  "closing": "UNILINE AGENCIA MARITIMA LTDA\nAs Agents and on behalf of YML – Yang Ming Marine Transport Corp\n2120 Ibirapuera Avenue, 13th Floor - Room 131/133, Indianópolis, SP – 04028001, Brazil\n+55 (11) 3787-9901\nwww.uniline.com.br",
+  "layout": "generic",
+  "bodyRollover": "Please be advised that the vessel {vO} was impacted by move restrictions during her port call in order to maintain her berth window. Due to unexpected delays during cargo operations, part of the import cargo could not be discharged and remained on board upon vessel departure. The cargo will be re-arranged to the next available sailing on {vN}.\n\nWe are sorry for the inconvenience caused, which was beyond owner´s control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+  "bodyVessel": "Please be advised that the cargo originally booked on board {vO} has been transferred to {vN} due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner´s control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+  "bodyDelay": "Please be advised that the departure of the vessel {vO} has been delayed due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner´s control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+  "bodyOther": "Please be advised of an operational update regarding the above referenced sailing.\n\nWe thank you in advance for your understanding and usual support. In case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team."
+}

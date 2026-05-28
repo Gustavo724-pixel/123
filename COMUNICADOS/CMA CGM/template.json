@@ -1,0 +1,13 @@
+{
+  "key": "CMA",
+  "name": "CMA CGM",
+  "color": "#C8102E",
+  "fullName": "CMA CGM (China) Shipping Co., Ltd",
+  "salutation": "Dear Valued Customers,",
+  "closing": "Customer Service Officer\nCustomer Care Department\nCMA CGM (China) Shipping Co., Ltd",
+  "layout": "cma",
+  "bodyRollover": "We regret to inform you that the following cargo on board {vO}, originally scheduled to depart, will be re-arranged to a new vessel {vN}. Please proceed to the port with the original vessel name before the cut-off time.\n\nOur company will make unified arrangements for the missed loading onto {vN}, with all related costs borne by our company.\n\nPlease refer to https://www.cma-cgm.com/ for the latest port arrival information.\n\nThank you for your consistent support. We will provide you with our best service!",
+  "bodyVessel": "We regret to inform you that the cargo originally scheduled on board {vO} will be re-arranged to {vN}.\n\nOur company will make unified arrangements for the missed loading, with all related costs borne by our company.\n\nThank you for your continued support!",
+  "bodyDelay": "We regret to inform you that due to operational reasons, the departure of the referenced shipment has been delayed.\n\nWe sincerely apologize for any inconvenience caused and thank you for your understanding.",
+  "bodyOther": "We would like to inform you of an update regarding the above referenced cargo.\n\nFor further information, please contact your local CMA CGM representative."
+}
