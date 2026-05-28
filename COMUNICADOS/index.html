@@ -202,6 +202,30 @@ hr.sep { border: none; border-top: 1px solid var(--border); }
 .hdr-generic { padding: 16px 28px; border-bottom: 4px solid var(--brand-color, #333); display: flex; align-items: center; gap: 14px; }
 .hdr-generic .h-brand { font-size: 22px; font-weight: 900; letter-spacing: 1px; color: var(--brand-color, #333); }
 
+/* ── Yang Ming layout ────────────────────────────────────── */
+.yml-header { position: relative; line-height: 0; }
+.yml-header img { width: 100%; display: block; }
+.yml-header-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 10px 22px 12px;
+  background: linear-gradient(to top, rgba(220,230,240,0.92) 60%, transparent 100%);
+}
+.yml-doc-title { font-size: 13px; font-weight: 700; color: #111; line-height: 1.4; }
+.yml-doc-date { font-size: 11.5px; color: #333; font-style: italic; text-align: right; margin-top: 2px; }
+/* Footer */
+.yml-footer { line-height: 0; }
+.yml-footer img { width: 100%; display: block; }
+
+/* Cut & Run extras */
+.cargo-plan { margin-bottom: 18px; }
+.cargo-plan .cp-title { font-weight: 700; margin-bottom: 8px; }
+.cargo-plan ul { margin: 0; padding: 0; list-style: none; }
+.cargo-plan li { padding: 3px 0 3px 20px; font-size: 13px; position: relative; }
+.cargo-plan li::before { content: "➢"; position: absolute; left: 0; color: #005AAA; font-weight: 700; }
+.vessel-sched { margin-bottom: 18px; }
+.vessel-sched .vs-title { font-weight: 700; margin-bottom: 8px; }
+.vessel-sched pre { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 3px; padding: 10px 12px; font-size: 12px; font-family: 'Courier New', monospace; white-space: pre-wrap; line-height: 1.6; }
+
 /* ── Print styles ────────────────────────────────────────── */
 @media print {
   header, .form-panel, .preview-bar { display: none !important; }
@@ -240,6 +264,7 @@ hr.sep { border: none; border-top: 1px solid var(--border); }
           <button class="type-pill active" data-type="rollover">Rollover</button>
           <button class="type-pill" data-type="vessel">Troca de Navio</button>
           <button class="type-pill" data-type="delay">Atraso</button>
+          <button class="type-pill" data-type="cutrun">Cut &amp; Run</button>
           <button class="type-pill" data-type="other">Outro</button>
         </div>
       </div>
@@ -300,7 +325,17 @@ hr.sep { border: none; border-top: 1px solid var(--border); }
 
         <div class="field">
           <label>Corpo do Comunicado</label>
-          <textarea id="f-body" rows="6" placeholder="Selecione um armador para carregar o texto padrão..."></textarea>
+          <textarea id="f-body" rows="5" placeholder="Selecione um armador para carregar o texto padrão..."></textarea>
+        </div>
+
+        <div class="field cutrun-only" style="display:none">
+          <label>Cargo Plan (uma linha = um item ➢)</label>
+          <textarea id="f-cargo-plan" rows="3" placeholder="65 TEUs remain on board, discharge planned for second call at BRSSZ&#10;3 TEUs discharged at BRSSZ — connecting vessel to BRNVT TBD"></textarea>
+        </div>
+
+        <div class="field cutrun-only" style="display:none">
+          <label>Vessel Schedule (texto livre)</label>
+          <textarea id="f-schedule" rows="4" placeholder="Vessel: CMA CGM THORIUM&#10;ETA Santos: 15/05 06:00&#10;ETB Santos: 17/05 01:00&#10;ETD Santos: 19/05 06:00"></textarea>
         </div>
       </div>
 
@@ -432,11 +467,12 @@ const FALLBACK = [
     fullName: "Yang Ming Marine Transport Corporation",
     salutation: "Dear Valued Customer,",
     closing: "UNILINE AGENCIA MARITIMA LTDA\nAs Agents and on behalf of YML — Yang Ming Marine Transport Corp\n2120 Ibirapuera Avenue, 13th Floor - Room 131/133, Indianópolis, SP — 04028001, Brazil\n+55 (11) 3787-9901\nwww.uniline.com.br",
-    layout: "generic",
+    layout: "yangming",
     bodyRollover: "Please be advised that the vessel {vO} was impacted by move restrictions during her port call in order to maintain her berth window. Due to unexpected delays during cargo operations, part of the import cargo could not be discharged and remained on board upon vessel departure. The cargo will be re-arranged to the next available sailing on {vN}.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
     bodyVessel: "Please be advised that the cargo originally booked on board {vO} has been transferred to {vN} due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
     bodyDelay: "Please be advised that the departure of the vessel {vO} has been delayed due to operational reasons.\n\nWe are sorry for the inconvenience caused, which was beyond owner's control, and thank you in advance for your understanding and usual support.\n\nIn case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
-    bodyOther: "Please be advised of an operational update regarding the above referenced sailing.\n\nWe thank you in advance for your understanding and usual support. In case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team."
+    bodyOther: "Please be advised of an operational update regarding the above referenced sailing.\n\nWe thank you in advance for your understanding and usual support. In case any additional clarification is required, please do not hesitate to contact your Local Sales Representative and/or Customer Service Team.",
+    bodyCutRun: "Please be advised that the vessel {vO} was impacted by move restrictions during her {pol} call in order to maintain her berth window. Due to unexpected delays during cargo operations, part of the {pol} import cargo could not be discharged and remained on board upon vessel departure."
   }
 ];
 
@@ -490,6 +526,10 @@ document.querySelectorAll('.type-pill').forEach(btn => {
     document.querySelectorAll('.type-pill').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeType = btn.dataset.type;
+    const isCutRun = activeType === 'cutrun';
+    document.querySelectorAll('.cutrun-only').forEach(el => {
+      el.style.display = isCutRun ? 'flex' : 'none';
+    });
     loadBody();
     render();
   };
@@ -498,7 +538,7 @@ document.querySelectorAll('.type-pill').forEach(btn => {
 function loadBody() {
   if (!activeKey) return;
   const t = templates[activeKey];
-  const map = { rollover: t.bodyRollover, vessel: t.bodyVessel, delay: t.bodyDelay, other: t.bodyOther };
+  const map = { rollover: t.bodyRollover, vessel: t.bodyVessel, delay: t.bodyDelay, other: t.bodyOther, cutrun: t.bodyCutRun || t.bodyOther };
   document.getElementById('f-body').value = map[activeType] || t.bodyOther;
 }
 
@@ -557,7 +597,7 @@ function render() {
   const t = templates[activeKey];
   const v = getVals();
   const body = fill(document.getElementById('f-body').value || '', v, t.name);
-  const typeLabel = { rollover:'Rollover', vessel:'Troca de Navio', delay:'Atraso', other:'Outro' }[activeType];
+  const typeLabel = { rollover:'Rollover', vessel:'Troca de Navio', delay:'Atraso', cutrun:'Cut & Run', other:'Outro' }[activeType];
   lbl.textContent = `${t.name} — ${typeLabel}`;
   out.innerHTML = buildEmail(t, v, body);
 }
@@ -670,7 +710,81 @@ function buildEmail(t, v, body) {
 <div class="pil-footer-date">${v.date || new Date().toISOString().split('T')[0]}</div>`;
   }
 
-  /* generic: MAERSK, MSC, ONE, YANG MING */
+  /* yangming */
+  if (t.layout === 'yangming') {
+    const isCR = activeType === 'cutrun';
+    const cargoRaw = (document.getElementById('f-cargo-plan').value || '').trim();
+    const schedRaw = (document.getElementById('f-schedule').value || '').trim();
+
+    let cargoSection = '';
+    if (isCR && cargoRaw) {
+      const items = cargoRaw.split('\n').filter(l => l.trim()).map(l => `<li>${esc(l.trim())}</li>`).join('');
+      cargoSection = `<div class="cargo-plan"><div class="cp-title">Cargo plan:</div><ul>${items}</ul></div>`;
+    }
+    let schedSection = '';
+    if (isCR && schedRaw) {
+      schedSection = `<div class="vessel-sched"><div class="vs-title">Vessel Schedule:</div><pre>${esc(schedRaw)}</pre></div>`;
+    }
+    const vesselRow = !isCR ? `
+  <div class="vessel-box">
+    <span><b>Original Vessel:</b> ${esc(v.vO)}</span>
+    <span class="vessel-arrow">→</span>
+    <span><b>New Vessel:</b> ${esc(v.vN)}</span>
+  </div>` : '';
+
+    return `
+<div class="yml-header">
+  <img src="./yml-header.jpg" alt="Yang Ming">
+  <div class="yml-header-overlay">
+    <div class="yml-doc-title">${subj}</div>
+    <div class="yml-doc-date">São Paulo, ${fmtDate(v.date)}</div>
+  </div>
+</div>
+<div class="e-body">
+  <p class="e-salutation">${esc(t.salutation)}</p>
+  <p class="e-text">${nl(body)}</p>
+  ${cargoSection}
+  ${schedSection}
+  ${vesselRow}
+  ${!isCR ? `<table class="e-table">
+    <thead><tr><th>Booking No.</th><th>Container No.</th><th>B/L No.</th><th>POL</th><th>POD</th></tr></thead>
+    <tbody><tr>
+      <td>${esc(v.booking)}</td><td>${esc(v.container)}</td><td>${esc(v.bl)}</td>
+      <td>${esc(v.pol)}</td><td>${esc(v.pod)}</td>
+    </tr></tbody>
+  </table>` : ''}
+  <div class="e-closing">${nl(t.closing)}</div>
+</div>
+<div class="yml-footer">
+  <img src="./yml-footer.jpg" alt="">
+</div>`;
+  }
+
+  /* generic: MAERSK, MSC, ONE */
+  const isCutRun = activeType === 'cutrun';
+
+  // Vessel box only shown for non-cutrun (cutrun shows vessels in schedule block)
+  const vesselBox = !isCutRun ? `
+  <div class="vessel-box">
+    <span><b>Original Vessel:</b> ${esc(v.vO)}</span>
+    <span class="vessel-arrow">→</span>
+    <span><b>New Vessel:</b> ${esc(v.vN)}</span>
+  </div>` : '';
+
+  // Cut & Run extra sections
+  let cutRunSections = '';
+  if (isCutRun) {
+    const cargoRaw = (document.getElementById('f-cargo-plan').value || '').trim();
+    const schedRaw = (document.getElementById('f-schedule').value || '').trim();
+    if (cargoRaw) {
+      const items = cargoRaw.split('\n').filter(l => l.trim()).map(l => `<li>${esc(l.trim())}</li>`).join('');
+      cutRunSections += `<div class="cargo-plan"><div class="cp-title">Cargo plan:</div><ul>${items}</ul></div>`;
+    }
+    if (schedRaw) {
+      cutRunSections += `<div class="vessel-sched"><div class="vs-title">Vessel Schedule:</div><pre>${esc(schedRaw)}</pre></div>`;
+    }
+  }
+
   return `
 <div class="hdr-generic" style="--brand-color:${t.color}">
   <div class="h-brand">${esc(t.name.toUpperCase())}</div>
@@ -682,6 +796,8 @@ function buildEmail(t, v, body) {
     <b>RE:</b> ${subj}
   </div>
   <p class="e-salutation">${esc(t.salutation)}</p>
+  <p class="e-text">${nl(body)}</p>
+  ${cutRunSections}
   <table class="e-table">
     <thead><tr><th>Booking No.</th><th>Container No.</th><th>B/L No.</th><th>POL</th><th>POD</th></tr></thead>
     <tbody><tr>
@@ -689,12 +805,7 @@ function buildEmail(t, v, body) {
       <td>${esc(v.pol)}</td><td>${esc(v.pod)}</td>
     </tr></tbody>
   </table>
-  <div class="vessel-box">
-    <span><b>Original Vessel:</b> ${esc(v.vO)}</span>
-    <span class="vessel-arrow">→</span>
-    <span><b>New Vessel:</b> ${esc(v.vN)}</span>
-  </div>
-  <p class="e-text">${nl(body)}</p>
+  ${vesselBox}
   <div class="e-closing">${nl(t.closing)}</div>
 </div>
 <div class="e-footer">${esc(t.fullName)}</div>`;
